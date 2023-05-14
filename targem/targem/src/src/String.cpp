@@ -4,58 +4,58 @@ String::String(const char* _mas) {
 	lenght = strlen(_mas);
 	capacity = lenght;
 
-	BaseChar = new char[capacity + 1];
-	BaseChar[lenght] = '\0';
+	line = new char[capacity + 1];
+	line[lenght] = '\0';
 
-	strcpy(BaseChar, _mas);
+	strcpy(line, _mas);
 }
 
-String::String(const String& other) : String(other.BaseChar)
+String::String(const String& other) : String(other.line)
 {
 
 }
 
 String::String() {
-	BaseChar = new char[1];
-	BaseChar[0] = '\0';
+	line = new char[1];
+	line[0] = '\0';
 }
 
 String::~String()
 {
-	delete[] BaseChar;
+	delete[] line;
 }
 
 String::String(String&& other) noexcept
 {
-	BaseChar = other.BaseChar;
+	line = other.line;
 	capacity = other.capacity;
 	lenght = other.lenght;
 
-	other.BaseChar = nullptr;
+	other.line = nullptr;
 	other.capacity = 0;
 	other.lenght = 0;
 }
 
 String& String::operator=(const String& other) {
-	size_t count_other = strlen(other.BaseChar);
-	size_t count_base = strlen(BaseChar);
+	size_t count_other = strlen(other.line);
+	size_t count_base = strlen(line);
 
-	if (other.BaseChar != BaseChar) {
+	if (other.line != line) {
 		if (count_other < count_base) {
-			strcpy(BaseChar, other.BaseChar);
+			strcpy(line, other.line);
 
 			lenght = count_other;
 		}
 		else
 		{
-			delete[] BaseChar;
+			delete[] line;
 			capacity = count_other;
 			lenght = count_other;
 
-			BaseChar = new char[count_other + 1];
-			BaseChar[lenght] = '\0';
+			line = new char[count_other + 1];
+			line[lenght] = '\0';
 
-			strcpy(BaseChar, other.BaseChar);
+			strcpy(line, other.line);
 		}
 	}
 
@@ -64,44 +64,50 @@ String& String::operator=(const String& other) {
 
 String& String::operator=(const char* other) {
 	size_t count_other = strlen(other);
-	size_t count_base = strlen(BaseChar);
+	size_t count_base = strlen(line);
 
-	if (other != BaseChar) {
+	if (other != line) {
 		if (count_other < count_base) {
-			strcpy(BaseChar, other);
+			strcpy(line, other);
 
 			lenght = count_other;
 		}
 		else
 		{
-			delete[] BaseChar;
+			delete[] line;
 			capacity = count_other;
 			lenght = count_other;
 
-			BaseChar = new char[count_other + 1];
-			BaseChar[lenght] = '\0';
+			line = new char[count_other + 1];
+			line[lenght] = '\0';
 
-			strcpy(BaseChar, other);	
+			strcpy(line, other);	
 		}
 	}
 	return *this;
 }
 
-String String::operator+(const char* right)
+String operator+(const char* left, const String& right)
 {
-	String p = concatenate(BaseChar, right);
+	String p = String::concatenate(left, right.get_data());
 	return p;
 }
 
-String String::operator+(String& right)
+String operator+(const String& left, const String& right)
 {
-	String p = concatenate(*this, right);
+	String p = String::concatenate(left, right);
+	return p;
+}
+
+String operator+(const String& left, const char* right)
+{
+	String p = String::concatenate(left.get_data(), right);
 	return p;
 }
 
 String& String::operator+=(const char* right)
 {
-	*this = concatenate(this->BaseChar, right);
+	*this = concatenate(this->line, right);
 	return *this;
 }
 
@@ -113,25 +119,23 @@ String& String::operator+=(String& right)
 
 String& String::operator>>(istream& stream)
 {
-	stream.get(*this->BaseChar);
+	stream.get(*this->line);
 	return *this;
 }
 
-
-
-String String::concatenate(const char* date, const char* other)
+String String::concatenate(const char* data, const char* other)
 {
-	size_t lenght_date = strlen(date);
+	size_t lenght_data = strlen(data);
 	size_t lenght_other = strlen(other);
-	size_t lenght = lenght_date + lenght_other;
+	size_t lenght = lenght_data + lenght_other;
 
 	String result;
 
-	result.BaseChar = new char[lenght+1];
-	result.BaseChar[lenght] = '\0';
+	result.line = new char[lenght+1];
+	result.line[lenght] = '\0';
 
-	strcpy(result.BaseChar, date);
-	strcpy(result.BaseChar + lenght_date, other);
+	strcpy(result.line, data);
+	strcpy(result.line + lenght_data, other);
 
 	result.capacity = lenght;
 	result.lenght = lenght;
@@ -139,16 +143,16 @@ String String::concatenate(const char* date, const char* other)
 	return result;
 }
 
-String String::concatenate(String& date, String& other)
+String String::concatenate(String& data, String& other)
 {
 	String result;
-	rsize_t lenght= date.get_lenght() + other.get_lenght();
+	rsize_t lenght= data.get_lenght() + other.get_lenght();
 
-	result.BaseChar = new char[ lenght + 1];
-	result.BaseChar[lenght] = '\0';
+	result.line = new char[ lenght + 1];
+	result.line[lenght] = '\0';
 
-	strcpy(result.BaseChar, date.BaseChar);
-	strcpy(result.BaseChar + date.get_lenght(), other.BaseChar);
+	strcpy(result.line, data.line);
+	strcpy(result.line + data.get_lenght(), other.line);
 
 	result.capacity = lenght;
 	result.lenght = lenght;

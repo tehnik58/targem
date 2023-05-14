@@ -9,10 +9,10 @@ class String {
 private:
 	size_t lenght;
 	size_t capacity;
-	char* BaseChar;
+	char* line;
 
-	String concatenate(const char* date, const char* other);
-	String concatenate(String& date, String& other);
+	static String concatenate(const char* date, const char* other);
+	static String concatenate(String& date, String& other);
 	
 public:
 
@@ -25,16 +25,21 @@ public:
 
 	String& operator=(const String&);
 	String& operator=(const char*);
-	String operator+(const char*);
-	String operator+(String&);
+	friend String operator+(const String&, const char*);
+	friend String operator+(const char*, const String&);
+	friend String operator+(const String&, const String&);
 	String& operator+=(const char*);
 	String& operator+=(String&);
 	String& operator>>(istream&);
 
-	explicit operator const char* () { return BaseChar; };
-	operator char* () const { return BaseChar; };
+	explicit operator const char* () { return line; };
+	operator char* () const { return line; };
 
-	char* get_chars() { return BaseChar; }
-	rsize_t get_lenght() { return lenght; }
-	rsize_t get_capacity() { return capacity; }
+	const char* get_data() const { return line; }
+	rsize_t get_lenght() const { return lenght; }
+	rsize_t get_capacity() const { return capacity; }
 };
+
+String operator+(const String&, const char*);
+String operator+(const char*, const String&);
+String operator+(const String&, const String&);

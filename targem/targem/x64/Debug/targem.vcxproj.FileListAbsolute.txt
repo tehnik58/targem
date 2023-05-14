@@ -1,1 +1,2 @@
 C:\Users\German\Desktop\targem\targem\x64\Debug\targem.exe
+C:\Users\German\Desktop\targem\targem\targem\targem\x64\Debug\targem.exe
